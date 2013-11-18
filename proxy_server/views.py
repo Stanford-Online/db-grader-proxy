@@ -11,9 +11,6 @@ import requests
 def home(request):
     # print(request.POST)
 
-    import ipdb
-    ipdb.set_trace()
-
     content = json.loads(request.body)
     body = json.loads(content['xqueue_body'])
 
@@ -30,36 +27,34 @@ def home(request):
     REQUESTS_TIMEOUT = 20
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
+    feedback = "<p>Great! You got the right answer!</p>"
 
     if success:
-        graded = json.loads(graded)
+        print("Successfully posted to grader")
 
-        # import ipdb
-        # ipdb.set_trace()
+		graded = json.loads(graded)
 
-        # feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
+        import ipdb
+        ipdb.set_trace()
 
-        # # Needs to be enclosed within <p>...</p> tags and <br> must be <br/>
-        # feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
+        feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
-        # # feedback = '<br/><p><table><tr><td>Wooo</td></tr></table></p>'
-        # # Look @ html5lib, beautifulsoup
+        # Needs to be enclosed within <p>...</p> tags and <br> must be <br/>
+        feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
 
+        # feedback = '<br/><p><table><tr><td>Wooo</td></tr></table></p>'
+        # Look @ html5lib, beautifulsoup
 
-        # # What is the grader_id suppose to be?
+        # What is the grader_id suppose to be?
         # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
-        # # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), '<p>No Explanation</p>', 'reference_dummy_grader')
+        # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), '<p>No Explanation</p>', 'reference_dummy_grader')
 
     # Post results back to XQueue
     # (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
 
-    if success:
-        print("successfully posted result back to xqueue")
-
-
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the right answer!</p>"}')
+    return HttpResponse('{"correct": true, "score": 1, "msg": ' + feedback + '}')
 
 
 
