@@ -47,7 +47,7 @@ def home(request):
 
 
         # What is the grader_id suppose to be?
-        xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
+        # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
         # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), '<p>No Explanation</p>', 'reference_dummy_grader')
 
     # Post results back to XQueue
@@ -59,7 +59,7 @@ def home(request):
 
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the right answer!</p>"}')
+    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got' + ' the right answer!</p>"}')
 
 
 
