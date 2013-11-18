@@ -37,8 +37,8 @@ def home(request):
 
         graded = json.loads(graded)
 
-        # import ipdb
-        # ipdb.set_trace()
+        import ipdb
+        ipdb.set_trace()
 
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
@@ -49,6 +49,7 @@ def home(request):
         # feedback = '<p><span style="font-weight:bold">Correct</span><table><tr><td>Wooo</td></tr></table></p>'
         # Look @ html5lib, beautifulsoup
 
+        zzz = 3
 
         # What is the grader_id suppose to be?
         # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
