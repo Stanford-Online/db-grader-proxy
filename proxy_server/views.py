@@ -43,9 +43,9 @@ def home(request):
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
         # Needs to be enclosed within <p>...</p> tags and <br> must be <br/>
-        feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
+        # feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
 
-        # feedback = '<br/><p><table><tr><td>Wooo</td></tr></table></p>'
+        feedback = '<p><table><tr><td>Wooo</td></tr></table></p>'
         # Look @ html5lib, beautifulsoup
 
 
