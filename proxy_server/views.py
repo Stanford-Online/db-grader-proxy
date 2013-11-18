@@ -9,8 +9,6 @@ import requests
 
 @csrf_exempt
 def home(request):
-    # print(request.POST)
-
     # import ipdb
     # ipdb.set_trace()
 
@@ -37,34 +35,11 @@ def home(request):
 
         graded = json.loads(graded)
 
-        import ipdb
-        ipdb.set_trace()
-
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
-        feedback = feedback.replace("\"", "'")
-        feedback = feedback.replace("<br>", "<br/>")
-        feedback = "<p>" + feedback + "</p>"
+        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>") + "</p>"
 
-        # Needs to be enclosed within <p>...</p> tags and <br> must be <br/>
-        # feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
-
-        # feedback = "<p><span style='font-weight:bold'>Correct</span><table><tr><td>Wooo</td></tr></table></p>"
-        # feedback = '<p><span style="font-weight:bold">Correct</span><table><tr><td>Wooo</td></tr></table></p>'
-        # Look @ html5lib, beautifulsoup
-
-        zzz = 3
-
-        # What is the grader_id suppose to be?
-        # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
-        # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), '<p>No Explanation</p>', 'reference_dummy_grader')
-
-    # Post results back to XQueue
-    # (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
-
-    # print("\n---\n")
-    # print(request.body)
     return HttpResponse('{"correct": true, "score": 1, "msg": "' + feedback + '"}')
-    # return HttpResponse("{'correct': true, 'score': 1, 'msg': '" + feedback + "'}")
+
 
 
 
