@@ -42,8 +42,8 @@ def home(request):
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
 
-        import ipdb
-        ipdb.set_trace()
+        # import ipdb
+        # ipdb.set_trace()
 
         # Consider re instead of a bunch of calls to replace function
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
