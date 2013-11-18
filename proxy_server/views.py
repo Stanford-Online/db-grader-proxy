@@ -11,6 +11,9 @@ import requests
 def home(request):
     # print(request.POST)
 
+    import ipdb
+    ipdb.set_trace()
+
     content = json.loads(request.body)
     body = json.loads(content['xqueue_body'])
 
@@ -27,15 +30,12 @@ def home(request):
     REQUESTS_TIMEOUT = 20
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
-    feedback = "<p>Great! You got the right answer!</p>"
 
     if success:
-        print("Successfully posted to grader")
+        graded = json.loads(graded)
 
-		graded = json.loads(graded)
-
-        import ipdb
-        ipdb.set_trace()
+        # import ipdb
+        # ipdb.set_trace()
 
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
@@ -45,16 +45,20 @@ def home(request):
         # feedback = '<br/><p><table><tr><td>Wooo</td></tr></table></p>'
         # Look @ html5lib, beautifulsoup
 
+
         # What is the grader_id suppose to be?
-        # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
+        xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), feedback, 'reference_dummy_grader')
         # xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], graded.get('score', 0), graded.get('maximum-score', 0), '<p>No Explanation</p>', 'reference_dummy_grader')
 
     # Post results back to XQueue
     # (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
 
+    if success:
+        print("successfully posted result back to xqueue")
+
+
     # print("\n---\n")
     # print(request.body)
-    # return HttpResponse('{"correct": true, "score": 1, "msg": ' + feedback + '}')
     return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the right answer!</p>"}')
 
 
