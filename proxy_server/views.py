@@ -37,15 +37,17 @@ def home(request):
 
         graded = json.loads(graded)
 
-        import ipdb
-        ipdb.set_trace()
-
         score = str(graded.get('score', 0))
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
 
+        import ipdb
+        ipdb.set_trace()
+
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>") + "</p>"
+
+        ipdb.set_trace()
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
