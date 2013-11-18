@@ -46,6 +46,7 @@ def home(request):
         # feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
 
         feedback = "<p><span style='font-weight:bold'>Correct</span><table><tr><td>Wooo</td></tr></table></p>"
+        # feedback = '<p><span style="font-weight:bold">Correct</span><table><tr><td>Wooo</td></tr></table></p>'
         # Look @ html5lib, beautifulsoup
 
 
@@ -58,7 +59,8 @@ def home(request):
 
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "' + feedback + '"}')
+    # return HttpResponse('{"correct": true, "score": 1, "msg": "' + feedback + '"}')
+    return HttpResponse("{'correct': true, 'score': 1, 'msg': '" + feedback + "'}")
 
 
 
