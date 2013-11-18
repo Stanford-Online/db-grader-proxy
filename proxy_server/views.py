@@ -30,8 +30,11 @@ def home(request):
     REQUESTS_TIMEOUT = 20
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
+    feedback = "<p>Great! You got the right answer!</p>"
 
     if success:
+    	print("Successfully returned from the grader")
+
         graded = json.loads(graded)
 
         # import ipdb
@@ -53,13 +56,9 @@ def home(request):
     # Post results back to XQueue
     # (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
 
-    if success:
-        print("successfully posted result back to xqueue")
-
-
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got' + ' the right answer!</p>"}')
+    return HttpResponse('{"correct": true, "score": 1, "msg": ' + feedback + '}')
 
 
 
