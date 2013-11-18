@@ -37,7 +37,7 @@ def home(request):
 
         graded = json.loads(graded)
 
-        import ipdb
+        # import ipdb
         ipdb.set_trace()
 
         score = str(graded.get('score', 0))
