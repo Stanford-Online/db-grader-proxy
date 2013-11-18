@@ -41,7 +41,9 @@ def home(request):
         ipdb.set_trace()
 
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
-        feedback.replace("\"", "'")
+        feedback = feedback.replace("\"", "'")
+        feedback = feedback.replace("<br>", "<br/>")
+        feedback = "<p>" + feedback + "</p>"
 
         # Needs to be enclosed within <p>...</p> tags and <br> must be <br/>
         # feedback = '<p><br/><font style="color:green; font-weight:bold;">Correct</font><br/><br/>Your Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table><br/>Expected Query Result: <table border="1" style="font-size:90%; padding: 1px;border-spacing: 0px; border-collapse: separate"><tr><td>E.T.</td></tr><tr><td>Raiders of the Lost Ark</td></tr></table></p>'
