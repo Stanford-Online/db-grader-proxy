@@ -29,6 +29,8 @@ def home(request):
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
     feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists.</p>"
+    isCorrect = "false"
+    score = "0"
 
     if success:
     	# print("Successfully returned from the grader")
@@ -38,10 +40,14 @@ def home(request):
         import ipdb
         ipdb.set_trace()
 
+        score = str(graded.get('score', 0))
+        maxScore = str(graded.get('maximum-score', 1))
+        isCorrect = "true" if score == maxScore else "false"
+
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>") + "</p>"
 
-    return HttpResponse('{"correct": true, "score": 1, "msg": "' + feedback + '"}')
+    return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
 
 
