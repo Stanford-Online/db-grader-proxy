@@ -25,15 +25,18 @@ def home(request):
     grader_payload['student_input'] = student_response
 
     # session = util.xqueue_login()
-    REQUESTS_TIMEOUT = 60
+    REQUESTS_TIMEOUT = 20
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
-    feedback = "<p>Great! You got the right answer!</p>"
+    feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists.</p>"
 
     if success:
-    	print("Successfully returned from the grader")
+    	# print("Successfully returned from the grader")
 
         graded = json.loads(graded)
+
+        import ipdb
+        ipdb.set_trace()
 
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>") + "</p>"
