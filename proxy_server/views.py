@@ -27,7 +27,7 @@ def home(request):
     grader_payload['student_input'] = student_response
 
     # session = util.xqueue_login()
-    REQUESTS_TIMEOUT = 20
+    REQUESTS_TIMEOUT = 60
     (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
 
     feedback = "<p>Great! You got the right answer!</p>"
