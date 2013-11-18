@@ -11,8 +11,8 @@ import requests
 def home(request):
     # print(request.POST)
 
-    import ipdb
-    ipdb.set_trace()
+    # import ipdb
+    # ipdb.set_trace()
 
     content = json.loads(request.body)
     body = json.loads(content['xqueue_body'])
@@ -59,7 +59,7 @@ def home(request):
 
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the right answer!</p>"}')
+    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the' + ' right answer!</p>"}')
 
 
 
