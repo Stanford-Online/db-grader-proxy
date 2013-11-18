@@ -59,7 +59,7 @@ def home(request):
 
     # print("\n---\n")
     # print(request.body)
-    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the' + ' right answer!</p>"}')
+    return HttpResponse('{"correct": true, "score": 1, "msg": "<p>Great! You got the right answer!</p>"}')
 
 
 
