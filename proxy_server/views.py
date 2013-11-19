@@ -2,6 +2,7 @@
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 import time
 import logging
 import json
@@ -26,8 +27,8 @@ def home(request):
     grader_payload['student_input'] = student_response
 
     # session = util.xqueue_login()
-    REQUESTS_TIMEOUT = 20
-    (success, graded) = postRequest('http://grade.prod.c2gops.com/AJAXPostHandler.php', grader_payload, REQUESTS_TIMEOUT)
+    
+    (success, graded) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
 
     feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists.</p>"
     isCorrect = "false"
