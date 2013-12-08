@@ -24,14 +24,15 @@ def home(request):
     grader_payload['student_input'] = student_response
 
     # session = util.xqueue_login()
+    import ipdb
+    ipdb.set_trace()
     
     # (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
     (success, msg) = postRequest('http://httpstat.us/500', grader_payload, settings.REQUESTS_TIMEOUT)
 
-    import ipdb
-    ipdb.set_trace()
 
-    feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
+    # feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
+    feedback = "<p>Hey</p>"
     isCorrect = "false"
     score = "0"
 
