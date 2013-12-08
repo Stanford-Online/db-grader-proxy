@@ -33,8 +33,7 @@ def home(request):
     (success, msg) = postRequest('http://httpstat.us/500', grader_payload, settings.REQUESTS_TIMEOUT)
 
 
-    # feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
-    feedback = "<p>Hey</p>"
+    feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
     isCorrect = "false"
     score = "0"
 
@@ -90,7 +89,7 @@ def postRequest(url, data, timeout):
     #     r = session.post(url[:-1], data=data, timeout=timeout, verify=False)
     
     if r.status_code not in [200]:
-        error_message = "Server %s returned status_code=%d' % (url, r.status_code)"
+        error_message = 'Server %s returned status_code=%d' % (url, r.status_code)
         log.error(error_message)
         return (False, error_message)
     
