@@ -45,12 +45,15 @@ def home(request):
 
         # Consider re instead of a bunch of calls to replace function
         # Alternatively, could change PHP code to correct returned XML/HTML
+
+        # Get feedback field from grader
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
+
+        # Format to something that EdX will not complain about
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
-        # feedback = "<p>" + feedback.replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
+        feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
-    # return HttpResponse("{\"correct\": " + isCorrect + ", \"score\": " + score + ", \"msg\": ''" + feedback + "'}")
 
 
 # TODO: Change "Queued..." in UI to something like "Checking"
