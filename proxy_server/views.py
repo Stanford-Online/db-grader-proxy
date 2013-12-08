@@ -28,6 +28,9 @@ def home(request):
     # (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
     (success, msg) = postRequest('http://httpstat.us/500', grader_payload, settings.REQUESTS_TIMEOUT)
 
+    import ipdb
+    ipdb.set_trace()
+
     feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
     isCorrect = "false"
     score = "0"
@@ -38,9 +41,6 @@ def home(request):
         score = str(graded.get('score', 0))
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
-
-        import ipdb
-        ipdb.set_trace()
 
         # Consider re instead of a bunch of calls to replace function
         # Alternatively, could change PHP code to correct returned XML/HTML
