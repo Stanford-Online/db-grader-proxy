@@ -25,17 +25,16 @@ def home(request):
 
     # session = util.xqueue_login()
     
-    (success, graded) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
+    # (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
+    (success, msg) = postRequest('http://httpstat.us/500', grader_payload, settings.REQUESTS_TIMEOUT)
 
-    feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists.</p>"
+    feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists. Specific error: %s</p>" % (msg)
     isCorrect = "false"
     score = "0"
 
+    # If successful post request, then return information from grader
     if success:
-    	# print("Successfully returned from the grader")
-
-        graded = json.loads(graded)
-
+        graded = json.loads(msg)
         score = str(graded.get('score', 0))
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
