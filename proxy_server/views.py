@@ -27,8 +27,7 @@ def home(request):
 
     # session = util.xqueue_login()
     
-    # (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
-    (success, msg) = postRequest('http://httpstat.us/503', grader_payload, settings.REQUESTS_TIMEOUT)
+    (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
 
     feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff if the problem persists. Specific error: <b>%s</b></p>" % (msg)
     isCorrect = "false"
@@ -101,7 +100,7 @@ def postRequest(url, data, timeout):
         description = ''
         if r.status_code in code2description:
             description = ' - %s' % (code2description[r.status_code])
-        error_message = 'The server returned status_code %d%s' % (r.status_code, description)
+        error_message = 'The server returned status code %d%s' % (r.status_code, description)
         log.error(error_message)
         return (False, error_message)
     
