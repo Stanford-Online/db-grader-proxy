@@ -11,9 +11,6 @@ import re
 
 @csrf_exempt
 def home(request):
-    # import ipdb
-    # ipdb.set_trace()
-
     content = json.loads(request.body)
     body = json.loads(content['xqueue_body'])
 
@@ -33,6 +30,9 @@ def home(request):
     feedback = "<p>Whoops, your response wasn't successfully graded. Please contact course staff is problem persists.</p>"
     isCorrect = "false"
     score = "0"
+
+    import ipdb
+    ipdb.set_trace()
 
     if success:
     	# print("Successfully returned from the grader")
@@ -54,9 +54,14 @@ def home(request):
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
 
+# TODO: Change "Queued..." in UI to something like "Checking"
 
+# TODO: Demonstrate 503 (and other error codes sent back) from grader is responded correctly!
+# On same machine as graders; run server on localhost
+# Proxy goes on 8000, not 80
+# Don't use runServer -- look at nGINx - gUNICORN -- ask Jason about this!
 
-
+# Generally, check this request to make sure it makes sense
 def postRequest(url, data, timeout):
     '''
         Contact grading controller, but fail gently.
