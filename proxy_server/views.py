@@ -9,6 +9,8 @@ import json
 import requests
 import re
 
+log = logging.getLogger(__name__)
+
 @csrf_exempt
 def home(request):
     content = json.loads(request.body)
@@ -84,8 +86,8 @@ def postRequest(url, data, timeout):
         log.error(error_message)
         return (False, error_message)
             
-    if r.status_code == 500 and url.endswith("/"):
-        r = session.post(url[:-1], data=data, timeout=timeout, verify=False)
+    # if r.status_code == 500 and url.endswith("/"):
+    #     r = session.post(url[:-1], data=data, timeout=timeout, verify=False)
     
     if r.status_code not in [200]:
         error_message = "Server %s returned status_code=%d' % (url, r.status_code)"
