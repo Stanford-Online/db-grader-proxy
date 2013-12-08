@@ -77,11 +77,23 @@ def postRequest(url, data, timeout):
         success: Flag indicating successful exchange (Boolean)
         msg: Accompanying message; Controller reply when successful (string)
         '''
+
+    code2description = {}
+    code2description[500] = "Internal Server Error"
+    code2description[502] = "Bad Gateway"
+    code2description[503] = "Service Unavailable"
+    code2description[504] = "Gateway Timeout"
+    code2description[505] = "Version Not Supported"
+    code2description[400] = "Bad Request"
+    code2description[401] = "Unathorized"
+    code2description[403] = "Forbidden"
+    code2description[404] = "Not Found"
+    code2description[408] = "Request Timeout"
     
     try:
         r = requests.post(url, data=data, timeout=timeout, verify=False)
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-        error_message = 'Could not connect to server at %s in timeout=%f' % (url, timeout)
+        error_message = 'Could not connect to server at %s in timeout: %f' % (url, timeout)
         log.error(error_message)
         return (False, error_message)
             
@@ -89,7 +101,10 @@ def postRequest(url, data, timeout):
     #     r = session.post(url[:-1], data=data, timeout=timeout, verify=False)
     
     if r.status_code not in [200]:
-        error_message = 'Server %s returned status_code=%d' % (url, r.status_code)
+        description = ''
+        if r.status_code in code2description:
+            description = ' - %s' % (code2description[r.status_code])
+        error_message = 'The server returned status_code %d%s' % (r.status_code, description)
         log.error(error_message)
         return (False, error_message)
     
@@ -98,7 +113,7 @@ def postRequest(url, data, timeout):
     elif hasattr(r, "content"):
         text = r.content
     else:
-        error_message = "Could not get response from http object."
+        error_message = "Could not get response from HTTP object."
         log.exception(error_message)
         return False, error_message
     
