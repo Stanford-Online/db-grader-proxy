@@ -50,7 +50,7 @@ def home(request):
         feedback = "<p>" + feedback.replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
 
     # return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
-    return HttpResponse("{\"correct\": " + isCorrect + ", \"score\": " + score + ", \"msg\": \"" + feedback + "\"}")
+    return HttpResponse("{\"correct\": " + isCorrect + ", \"score\": " + score + ", \"msg\": ''" + feedback + "'}")
 
 
 # TODO: Change "Queued..." in UI to something like "Checking"
