@@ -31,9 +31,6 @@ def home(request):
     isCorrect = "false"
     score = "0"
 
-    import ipdb
-    ipdb.set_trace()
-
     if success:
     	# print("Successfully returned from the grader")
 
@@ -43,15 +40,17 @@ def home(request):
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
 
-        # import ipdb
-        # ipdb.set_trace()
+        import ipdb
+        ipdb.set_trace()
 
         # Consider re instead of a bunch of calls to replace function
         # Alternatively, could change PHP code to correct returned XML/HTML
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
-        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
+        # feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
+        feedback = "<p>" + feedback.replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
 
-    return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
+    # return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
+    return HttpResponse("{\"correct\": " + isCorrect + ", \"score\": " + score + ", \"msg\": \"" + feedback + "\""})
 
 
 # TODO: Change "Queued..." in UI to something like "Checking"
