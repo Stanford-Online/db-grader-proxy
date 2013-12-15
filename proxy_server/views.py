@@ -46,6 +46,9 @@ def home(request):
         # Get feedback field from grader
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
+        import ipdb
+        ipdb.set_trace()
+
         # Format to something that EdX will not complain about
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
