@@ -53,6 +53,9 @@ def home(request):
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
+        # Only want paragraph, font, and break tags; escape all others
+        feedback = re.sub(r'(<)([^p>|^/p>|^font>|^/font>|^br/>])', '&lt;\2', feedback)
+
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
 
