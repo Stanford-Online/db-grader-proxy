@@ -57,7 +57,7 @@ def home(request):
         feedback = re.sub(r'<', '&lt;', feedback)
 
         # Change back to < for those we want
-        feedback = re.sub(r'&lt;(br/|p|font|i|font|table|th|tr|td)', r'<\1>', feedback)
+        feedback = re.sub(r'&lt;(br/|p|font|i|font|table|th|tr|td)', r'<\1', feedback)
         feedback = re.sub(r'&lt;/(p|font|i|font|table|th|tr|td)>', r'</\1>', feedback)
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
