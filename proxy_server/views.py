@@ -53,8 +53,12 @@ def home(request):
         import ipdb
         ipdb.set_trace()
 
-        # Only want certain tags; escape all others
-        feedback = re.sub(r'(<)([^p>|^/p>|^font>|^/font>|^br/>|^i>|^/i>])', r'&lt;\2', feedback)
+        # Change all to &lt;
+        feedback = re.sub(r'<', '&lt;', feedback)
+
+        # Change back to < for those we want
+        feedback = re.sub(r'&lt;(br/|p|font|i|font|table|th|tr|td)', r'<\1>', feedback)
+        feedback = re.sub(r'&lt;/(p|font|i|font|table|th|tr|td)>', r'</\1>', feedback)
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
