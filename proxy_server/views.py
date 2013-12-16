@@ -50,6 +50,9 @@ def home(request):
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
+        import ipdb
+        ipdb.set_trace()
+
         # Only want paragraph, font, and break tags; escape all others
         feedback = re.sub(r'(<)([^p>|^/p>|^font>|^/font>|^br/>])', r'&lt;\2', feedback)
 
