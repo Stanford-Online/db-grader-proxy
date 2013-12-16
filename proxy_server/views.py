@@ -50,8 +50,8 @@ def home(request):
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
-        import ipdb
-        ipdb.set_trace()
+        # import ipdb
+        # ipdb.set_trace()
 
         # Change all to &lt;
         feedback = re.sub(r'<', '&lt;', feedback)
