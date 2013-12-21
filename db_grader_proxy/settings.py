@@ -1,4 +1,6 @@
+from path import path
 # Django settings for db_grader_proxy project.
+PROJECT_ROOT = path(__file__).abspath().dirname().dirname()
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -20,7 +22,7 @@ DATABASES = {
     }
 }
 
-DB_GRADER = 'http://grade.prod.c2gops.com/AJAXPostHandler.php'
+DB_GRADER = 'http://localhost:8000/AJAXPostHandler.php'
 REQUESTS_TIMEOUT = 20
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -113,6 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    PROJECT_ROOT / "templates",
 )
 
 INSTALLED_APPS = (
