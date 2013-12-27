@@ -2,7 +2,7 @@ from path import path
 # Django settings for db_grader_proxy project.
 PROJECT_ROOT = path(__file__).abspath().dirname().dirname()
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
