@@ -22,7 +22,7 @@ DATABASES = {
     }
 }
 
-DB_GRADER = 'http://localhost:8000/AJAXPostHandler.php'
+DB_GRADER = 'http://localhost/AJAXPostHandler.php'
 REQUESTS_TIMEOUT = 20
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
