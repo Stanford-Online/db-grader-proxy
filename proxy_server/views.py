@@ -33,6 +33,9 @@ def home(request):
     isCorrect = "false"
     score = "0"
 
+    import ipdb
+    ipdb.set_trace()
+
     # If successful post request, then return information from grader
     if success:
         graded = json.loads(msg)
@@ -49,9 +52,6 @@ def home(request):
         # Format to something that EdX will not complain about
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
-
-        import ipdb
-        ipdb.set_trace()
 
         # Change all to &lt;
         feedback = re.sub(r'<', '&lt;', feedback)
