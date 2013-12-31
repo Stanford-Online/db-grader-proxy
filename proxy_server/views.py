@@ -33,9 +33,6 @@ def home(request):
     isCorrect = "false"
     score = "0"
 
-    import ipdb
-    ipdb.set_trace()
-
     # If successful post request, then return information from grader
     if success:
         graded = json.loads(msg)
@@ -53,12 +50,43 @@ def home(request):
         feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
-        # Change all to &lt;
-        feedback = re.sub(r'<', '&lt;', feedback)
+        # Change all to &lttt; (this allows any original &lt; to not be lumped in here)
+        feedback = re.sub(r'<', '&lttt;', feedback)
 
         # Change back to < for those we want
-        feedback = re.sub(r'&lt;(br/|p|font|i|font|table|th|tr|td)', r'<\1', feedback)
-        feedback = re.sub(r'&lt;/(p|font|i|font|table|th|tr|td)>', r'</\1>', feedback)
+        feedback = re.sub(r'&lttt;(br/|p|pre|font|i|font|table|th|tr|td)', r'<\1', feedback)
+        feedback = re.sub(r'&lttt;/(p|pre|font|i|font|table|th|tr|td)>', r'</\1>', feedback)
+        feedback = re.sub(r'&lttt;', '&lt;', feedback)
+
+        # Make sure there are no <br/> inside <pre>...</pre> block
+        # parts = feedback.split("pre>")
+        # if len(parts) > 0:
+        #     # Odd-indexed parts are within a pre block
+        #     for i in range(1, len(parts), 2):
+        #         parts[i] = re.sub(r'<br/>', '</pre><pre>', parts[i])
+        #     feedback = "pre>".join(parts)
+
+        # # Ensure no empty <pre>...</pre> blocks
+        # feedback = re.sub(r'<pre></pre>', '', feedback)
+
+        # import ipdb
+        # ipdb.set_trace()
+
+        # If feedback too long
+        if len(feedback) > 16000:
+            tmp = "<p>Message Too Long. Here is a snapshot:"
+
+            feedback = feedback[0:15900]
+            lastIndex = feedback.rfind(">")
+            feedback = feedback[0:lastIndex + 1]
+
+            if feedback.count('pre>') % 2 == 1:
+                feedback += "</pre>"
+            if feedback.count('<font') != feedback.count('</font'):
+                feedback += "</font>"
+            if feedback.count('p>') % 2 == 1:
+                feedback += "</p>"
+            feedback = tmp + feedback + "</p>"
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
