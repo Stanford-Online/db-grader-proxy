@@ -81,6 +81,12 @@ def home(request):
                 feedback += "</pre>"
             if feedback.count('<font') != feedback.count('</font'):
                 feedback += "</font>"
+            if feedback.count('<td') != feedback.count('</td'):
+                feedback += "</td>"
+            if feedback.count('<tr') != feedback.count('</tr'):
+                feedback += "</tr>"
+            if feedback.count('<table') != feedback.count('</table'):
+                feedback += "</table>"
             if feedback.count('p>') % 2 == 1:
                 feedback += "</p>"
             feedback = tmp + feedback + "</p>"
