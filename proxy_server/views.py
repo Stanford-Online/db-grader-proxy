@@ -47,7 +47,7 @@ def home(request):
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
         # Format to something that EdX will not complain about
-        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>") + "</p>"
+        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>").replace("\\", "&#92;") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
         # Change all to &lttt; (this allows any original &lt; to not be lumped in here)
@@ -69,9 +69,6 @@ def home(request):
         # # Ensure no empty <pre>...</pre> blocks
         # feedback = re.sub(r'<pre></pre>', '', feedback)
 
-        # import ipdb
-        # ipdb.set_trace()
-
         # If feedback too long
         if len(feedback) > 16000:
             tmp = "<p>Message Too Long. Here is a snapshot:"
@@ -87,6 +84,9 @@ def home(request):
             if feedback.count('p>') % 2 == 1:
                 feedback += "</p>"
             feedback = tmp + feedback + "</p>"
+
+        elif feedback.count('<font') != feedback.count('</font'):
+            feedback = feedback[0:len(feedback)-4] + "</font></p>"
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
 
