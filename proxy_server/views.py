@@ -47,7 +47,7 @@ def home(request):
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
         # Format to something that EdX will not complain about
-        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("<pre/>", "<pre>").replace("\\", "&#92;") + "</p>"
+        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("\r", "").replace("<pre/>", "<pre>").replace("\\", "&#92;") + "</p>"
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
 
         # Change all to &lttt; (this allows any original &lt; to not be lumped in here)
