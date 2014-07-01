@@ -1,4 +1,6 @@
-# Create your views here.
+# Implementation of the db_grader_proxy server
+# Forwards requests containing student db queries to be graded to grader server
+# Html formats/sanitizes response and returns to server 
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -8,8 +10,16 @@ import logging
 import json
 import requests
 import re
+import bleach 
 
+
+MAX_FEEDBACK_LENGTH = 16000
+FEEDBACK_TRIM_LENGTH = 15900
+FEEDBACK_TAGS = ['p', 'br', 'font', 'table', 'tbody', 'tr', 'td', 'i', "pre", "em"]
+FEEDBACK_ATTRS = { '*' : ['style', 'border'] } # hash of tag name --> allowed attributes
+FEEDBACK_STYLES = ['color', 'font-weight', 'font-size', 'padding', 'border-spacing', 'border-collapse']
 log = logging.getLogger(__name__)
+
 
 @csrf_exempt
 def home(request):
@@ -24,7 +34,7 @@ def home(request):
     grader_payload = json.loads(body['grader_payload'])
     student_response = body.get('student_response', '')
     grader_payload['student_input'] = student_response
-
+    
     # session = util.xqueue_login()
     
     (success, msg) = postRequest(settings.DB_GRADER, grader_payload, settings.REQUESTS_TIMEOUT)
@@ -40,61 +50,48 @@ def home(request):
         maxScore = str(graded.get('maximum-score', 1))
         isCorrect = "true" if score == maxScore else "false"
 
-        # Consider re instead of a bunch of calls to replace function
-        # Alternatively, could change PHP code to correct returned XML/HTML
-
         # Get feedback field from grader
         feedback = graded.get('feedback')[0].get('explanation', '<p>No Explanation</p>').strip().encode('ascii', 'ignore')
 
-        # Format to something that EdX will not complain about
-        feedback = "<p>" + feedback.replace("\"", "'").replace("<br>", "<br/>").replace("\n", "<br/>").replace("\r", "").replace("<pre/>", "<pre>").replace("\\", "&#92;") + "</p>"
+        # Clean up feedback to be html safe and well formatted for EdX 
         feedback = re.sub(r'<class \'sqlite3\..*\'>', '', feedback)
+        feedback = sanitizeFeedback(feedback)
 
-        # Change all to &lttt; (this allows any original &lt; to not be lumped in here)
-        feedback = re.sub(r'<', '&lttt;', feedback)
-
-        # Change back to < for those we want
-        feedback = re.sub(r'&lttt;(br/|p|pre|font|i|font|table|th|tr|td)', r'<\1', feedback)
-        feedback = re.sub(r'&lttt;/(p|pre|font|i|font|table|th|tr|td)>', r'</\1>', feedback)
-        feedback = re.sub(r'&lttt;', '&lt;', feedback)
-
-        # Make sure there are no <br/> inside <pre>...</pre> block
-        # parts = feedback.split("pre>")
-        # if len(parts) > 0:
-        #     # Odd-indexed parts are within a pre block
-        #     for i in range(1, len(parts), 2):
-        #         parts[i] = re.sub(r'<br/>', '</pre><pre>', parts[i])
-        #     feedback = "pre>".join(parts)
-
-        # # Ensure no empty <pre>...</pre> blocks
-        # feedback = re.sub(r'<pre></pre>', '', feedback)
-
-        # If feedback too long
-        if len(feedback) > 16000:
-            tmp = "<p>Message Too Long. Here is a snapshot:"
-
-            feedback = feedback[0:15900]
-            lastIndex = feedback.rfind(">")
-            feedback = feedback[0:lastIndex + 1]
-
-            if feedback.count('pre>') % 2 == 1:
-                feedback += "</pre>"
-            if feedback.count('<font') != feedback.count('</font'):
-                feedback += "</font>"
-            if feedback.count('<td') != feedback.count('</td'):
-                feedback += "</td>"
-            if feedback.count('<tr') != feedback.count('</tr'):
-                feedback += "</tr>"
-            if feedback.count('<table') != feedback.count('</table'):
-                feedback += "</table>"
-            if feedback.count('p>') % 2 == 1:
-                feedback += "</p>"
-            feedback = tmp + feedback + "</p>"
-
-        elif feedback.count('<font') != feedback.count('</font'):
-            feedback = feedback[0:len(feedback)-4] + "</font></p>"
+        # Trim if feedback too long
+        if len(feedback) > MAX_FEEDBACK_LENGTH:
+            feedback = truncateFeedback(feedback)
 
     return HttpResponse('{"correct": ' + isCorrect + ', "score": ' + score + ', "msg": "' + feedback + '"}')
+
+def truncateFeedback(feedback):
+    """
+    Trims feedback to an acceptable length for displaying
+    """
+    tmp = "<p>Message Too Long. Here is a snapshot:"
+
+    feedback = feedback[0:FEEDBACK_TRIM_LENGTH]
+    lastIndex = feedback.rfind(">")
+    feedback = feedback[0:lastIndex + 1]
+
+    # Now sanitize the newly trimmed html, to fix mismatched tags
+    feedback = sanitizeFeedback(feedback)
+    feedback = tmp + feedback + "</p>"
+    
+    return feedback
+    
+def sanitizeFeedback(feedback):
+    """
+    Cleans the html feedback string, ensuring proper escaping
+    """
+    feedback = feedback.replace('\r', '')
+    feedback = re.sub('<!', '&lt;!', feedback) # clean for DTD/XML syntax so those error messages aren't stripped 
+    feedback = bleach.clean(feedback, FEEDBACK_TAGS, FEEDBACK_ATTRS, FEEDBACK_STYLES)
+
+    # Bleach uncloses br tags, switches single quotes with doubles. 
+    # Also replace any new lines with break tags, and backslashs that break XML/DTD
+    feedback = feedback.replace("\n", "<br/>").replace("<br>", "<br/>").replace("\"", "\'").replace("\\", "")
+
+    return feedback
 
 
 # TODO: Change "Queued..." in UI to something like "Checking"
